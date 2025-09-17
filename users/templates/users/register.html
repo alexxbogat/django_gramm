@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container apple-style">
+
+        <!-- PAGE TITLE -->
+        <h2 class="page-title">Register</h2>
+
+        {% if not email_sent %}
+
+            <!-- FORM ERRORS -->
+            {% if form.non_field_errors %}
+                <div class="alert">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <!-- REGISTRATION FORM -->
+            <form method="POST" action="{% url 'register' %}" class="glass-form">
+                {% csrf_token %}
+                {% for field in form %}
+                    <!-- FORM FIELD -->
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+
+                        <!-- FIELD ERRORS -->
+                        {% if field.errors %}
+                            <div class="alert-error">
+                                {% for error in field.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <!-- FIELD HELP TEXT -->
+                        {% if field.help_text %}
+                            <small class="help-text">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <!-- SUBMIT BUTTON -->
+                <button type="submit" class="btn apple-btn">Register</button>
+            </form>
+
+        {% else %}
+
+            <!-- EMAIL SENT MESSAGE -->
+            <div class="alert">A confirmation link has been sent to your email.</div>
+
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load cloudinary %}
+
+{% block content %}
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <!-- PAGE TITLE -->
+        <h2 class="page-title">Edit Post</h2>
+
+        <!-- EDIT POST FORM -->
+        <form method="post" enctype="multipart/form-data" class="glass-form">
+            {% csrf_token %}
+
+            <!-- TEXT FIELD GROUP -->
+            <div class="form-group">
+                {{ form.text.label_tag }}
+                {{ form.text }}
+
+                <!-- TEXT FIELD ERRORS -->
+                {% if form.text.errors %}
+                    <div class="alert-error">
+                        {% for error in form.text.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- TEXT FIELD HELP TEXT -->
+                {% if form.text.help_text %}
+                    <small class="help-text">{{ form.text.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <!-- CURRENT IMAGES DISPLAY GROUP -->
+            {% if post.images.all %}
+                <div class="form-group">
+                    <label>Current Images</label>
+                    <div class="image-gallery">
+                        {% for image in post.images.all %}
+                            <!-- IMAGE CARD WITH DELETE OPTION -->
+                            <label class="image-card">
+                                <input type="checkbox" name="delete_images" value="{{ image.id }}">
+                                {% cloudinary image.file quality='auto' width=200 crop='pad' background='gen_fill:ignore-foreground_true' alt="Image" %}
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <small class="help-text">Click on the picture you want to delete</small>
+                </div>
+            {% endif %}
+
+            <!-- NEW IMAGES UPLOAD GROUP -->
+            <div class="form-group">
+                <label for="images">Share Images</label>
+                <input type="file" name="images" id="images" multiple accept="image/*">
+                <small class="help-text">You can select multiple images to share with your post</small>
+            </div>
+
+            <!-- TAGS FIELD GROUP -->
+            <div class="form-group">
+                {{ form.tags.label_tag }}
+                {{ form.tags }}
+
+                <!-- TAGS FIELD ERRORS -->
+                {% if form.tags.errors %}
+                    <div class="alert-error">
+                        {% for error in form.tags.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- TAGS FIELD HELP TEXT -->
+                {% if form.tags.help_text %}
+                    <small class="help-text">{{ form.tags.help_text }}</small>
+                {% else %}
+                    <small class="help-text">Separate tags with commas (e.g., travel, food, lifestyle)</small>
+                {% endif %}
+            </div>
+
+            <!-- SUBMIT BUTTON -->
+            <button type="submit" class="btn futuristic-btn">
+                <span>Save Post</span>
+            </button>
+        </form>
+    </div>
+{% endblock %}

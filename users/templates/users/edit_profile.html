@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- MAIN CONTAINER -->
+    <div class="container apple-style">
+
+        <!-- ALERTS -->
+        {% if show_success %}
+            <div class="alert">Email successfully verified.</div>
+        {% endif %}
+        {% if show_success_profile %}
+            <div class="alert">Your profile has been updated!</div>
+        {% endif %}
+
+        <!-- EDIT PROFILE FORM -->
+        <form method="POST" action="{% url 'edit_profile' user.username %}" enctype="multipart/form-data"
+              class="glass-form">
+            {% csrf_token %}
+
+            <!-- USER INFO FIELDS -->
+            {{ user_form.email.label_tag }} {{ user_form.email }}
+            {{ user_form.username.label_tag }} {{ user_form.username }} {{ user_form.username.errors }}
+            {{ user_form.first_name.label_tag }} {{ user_form.first_name }}
+            {{ user_form.last_name.label_tag }} {{ user_form.last_name }}
+
+            <!-- PROFILE DESCRIPTION & AVATAR -->
+            {{ profile_form.description.label_tag }} {{ profile_form.description }}
+            <label for="avatar">Avatar</label>
+            <input type="file" name="avatar" id="avatar">
+
+            <!-- SUBMIT -->
+            <button type="submit" class="btn apple-btn">Save</button>
+        </form>
+    </div>
+{% endblock %}

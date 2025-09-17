@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load cloudinary %}
+{% load static %}
+
+{% block content %}
+    <!-- MAIN PROFILE CONTAINER -->
+    <div class="container profile-container apple-style">
+
+        <!-- HEADER WITH BACK BUTTON AND TITLE -->
+        <div class="followers-header">
+            <a href="{% url 'profile' profile_user.username %}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Profile
+            </a>
+            <h2>{{ profile_user.username }}'s {{ title }}</h2>
+        </div>
+
+        <!-- LIST OF USERS -->
+        <div class="users-list">
+            {% for user in users %}
+                <div class="user-item">
+
+                    <!-- USER AVATAR -->
+                    <div class="user-avatar">
+                        {% if user.profile.avatar %}
+                            {% cloudinary user.profile.avatar.file quality='auto' width=50 height=50 crop='pad' background='gen_fill:ignore-foreground_true' class="avatar-small" alt="Avatar" %}
+                        {% else %}
+                            <img src="{% static 'img/users/default_avatar.jpg' %}" class="avatar-small"
+                                 alt="Default Avatar">
+                        {% endif %}
+                    </div>
+
+                    <!-- USER INFO -->
+                    <div class="user-info">
+                        <a href="{% url 'profile' user.username %}" class="username-link">
+                            <strong>@{{ user.username }}</strong>
+                        </a>
+                        {% if user.first_name or user.last_name %}
+                            <p class="user-full-name">{{ user.first_name }} {{ user.last_name }}</p>
+                        {% endif %}
+                        {% if user.profile.description %}
+                            <p class="user-bio">{{ user.profile.description|truncatewords:5 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <!-- EMPTY STATE -->
+                <div class="empty-state">
+                    <p>No {{ title|lower }} yet.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
